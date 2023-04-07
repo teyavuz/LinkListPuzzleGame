@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             orgImg = new System.Windows.Forms.PictureBox();
             shuffleBtn = new System.Windows.Forms.Button();
             button1 = new System.Windows.Forms.Button();
@@ -59,6 +60,7 @@
             // 
             // orgImg
             // 
+            orgImg.BackgroundImage = (System.Drawing.Image)resources.GetObject("orgImg.BackgroundImage");
             orgImg.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             orgImg.Location = new System.Drawing.Point(15, 19);
             orgImg.Name = "orgImg";
@@ -69,7 +71,8 @@
             // 
             // shuffleBtn
             // 
-            shuffleBtn.Location = new System.Drawing.Point(74, 266);
+            shuffleBtn.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            shuffleBtn.Location = new System.Drawing.Point(81, 268);
             shuffleBtn.Name = "shuffleBtn";
             shuffleBtn.Size = new System.Drawing.Size(75, 23);
             shuffleBtn.TabIndex = 1;
@@ -329,7 +332,8 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            BackColor = System.Drawing.SystemColors.ActiveCaption;
+            BackColor = System.Drawing.SystemColors.InfoText;
+            BackgroundImage = (System.Drawing.Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new System.Drawing.Size(919, 475);
             Controls.Add(listBox1);
             Controls.Add(scoreboardLbl);
@@ -356,6 +360,7 @@
             Controls.Add(button1);
             Controls.Add(shuffleBtn);
             Controls.Add(orgImg);
+            ForeColor = System.Drawing.SystemColors.ActiveCaption;
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             Name = "MainForm";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

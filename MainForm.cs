@@ -22,7 +22,7 @@ namespace LinkListPuzzleGame
         private void MainForm_Load(object sender, EventArgs e)
         {
             shuffleBtn.Enabled = false;
-            for (int i = 1; i <= 16; i++)//Form ilk açıldığında puzzle parçaları kullanılabilir değildir
+            for (int i = 1; i <= 16; i++)
             {
                 var button = Controls.Find($"button{i}", true).FirstOrDefault() as Button;
                 if (button != null)
@@ -31,16 +31,16 @@ namespace LinkListPuzzleGame
                 }
             }
 
-            if (!File.Exists(scoreFile.FilePath)) //dosyaYolunda dosya yok ise içeriye gir
+            if (!File.Exists(scoreFile.FilePath))
             {
-                using (StreamWriter sw = File.CreateText(scoreFile.FilePath)) //Belirtilen dosya yolunda dosya yoksa oluştur
+                using (StreamWriter sw = File.CreateText(scoreFile.FilePath))
                 {
-                    sw.WriteLine("Ad,Hamle,Puan"); //Oluşturulan veriye ilk satırını ekle
+                    sw.WriteLine("Ad,Hamle,Puan");
                 }
             }
 
-            listele();
-            username.Text = usernameTxt;//Form2'den gelen kullanıcı adı labela aktarılıyor
+            toList();
+            username.Text = usernameTxt;
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -53,30 +53,30 @@ namespace LinkListPuzzleGame
             shuffle();
         }
 
-        private void shuffle()//Sadece 16. parça doğru yerde olunca en az bir tanesi doğru yerde diye algılamıyor
+        private void shuffle()
         {
             if (orgImg.Image != null)
             {
-                puzzleList.Clear();//Listeyi temizlemezsem her seferinde ilk seçilen görsel gelir çünkü ilk 16 düğüme bü görselin parçaları atandı
+                puzzleList.Clear();
             }
 
             Random rastgele = new Random();
             LinkedList<Image> copyLinkedList = new LinkedList<Image>(orgList);
-            for (int i = 0; i < 16; i++)//16 tane parça var 16 kere çalışacak
+            for (int i = 0; i < 16; i++)
             {
-                int rastgeleIndex = rastgele.Next(0, copyLinkedList.Count);//0 ve 16 arasında rastgele bir sayı oluşturuyoruz
-                LinkedListNode<Image> rastgeleNode = copyLinkedList.First;//Image sınıfı türünden bir düğüm elde ediyoruz ve buna düzenli listenin ilk elemanını atıyoruz
+                int rastgeleIndex = rastgele.Next(0, copyLinkedList.Count);
+                LinkedListNode<Image> rastgeleNode = copyLinkedList.First;
                 for (int j = 0; j < rastgeleIndex; j++)
                 {
-                    rastgeleNode = rastgeleNode.Next;//Rastgele sayının üretildiği düğümün bulunduğu yere kadar ilerliyoruz
+                    rastgeleNode = rastgeleNode.Next;
                 }
-                copyLinkedList.Remove(rastgeleNode);//Karışık listeye alınan düğümü düzgün olan kopya listeden siliyoruz bu sayede aynı parça iki kez işleme alınmıyor
-                puzzleList.AddLast(rastgeleNode);//Karıştırılmış listeye resim parçalı düğüm ekleniyor
+                copyLinkedList.Remove(rastgeleNode);
+                puzzleList.AddLast(rastgeleNode);
             }
 
-            LinkedListNode<Image> puzzleListNode = puzzleList.First;//Karışık listenin ilk düğümü
-            LinkedListNode<Image> orgListNode = orgList.First;//Düzgün listenin ilk düğümü
-            int count = 0;//Her iki listede de parçalar aynıysa artacak olan sayaç
+            LinkedListNode<Image> puzzleListNode = puzzleList.First;
+            LinkedListNode<Image> orgListNode = orgList.First;
+            int count = 0;
             while (puzzleListNode.Next != null)
             {
                 if (puzzleListNode.Value == orgListNode.Value)
@@ -87,12 +87,12 @@ namespace LinkListPuzzleGame
                 orgListNode = orgListNode.Next;
             }
 
-            if (count >= 1)//En az bir parça doğru yerde mi diye kontrol ediyor
+            if (count >= 1)
             {
-                shuffleBtn.Enabled = false;//Parçalardan en az bir tanesi doğru yerdeyse artık karıştırma butonu aktif olmasın yani karıştırma yapılamasın
-                orgImg.Enabled = false;//Parçalardan en az bir tanesi doğru yerdeyse artık fotoğraf seçme işlemine izin verilmesin
+                shuffleBtn.Enabled = false;
+                orgImg.Enabled = false;
 
-                for (int i = 1; i <= 16; i++)//Karıştırma işlemi düzgün şekilde bitti ve karıştırma butonu deaktif oldu puzzle parçaları aktif oldu
+                for (int i = 1; i <= 16; i++)
                 {
                     var button = Controls.Find($"button{i}", true).FirstOrDefault() as Button;
                     if (button != null)
@@ -102,8 +102,8 @@ namespace LinkListPuzzleGame
                 }
             }
 
-            //Her bir butona yeni bağlı listedeki sıradaki elemanı atıyoruz
-            LinkedListNode<Image> current = puzzleList.First;//Karışık listenin ilk düğümünü yeni bir düğüme atıyoruz
+
+            LinkedListNode<Image> current = puzzleList.First;
             for (int i = 1; i <= 16; i++)
             {
                 var button = Controls.Find($"button{i}", true).FirstOrDefault() as Button;
@@ -123,19 +123,17 @@ namespace LinkListPuzzleGame
         int findCount = 0;
 
 
-        //Swap fonksiyonu sayesinde seçilen butonlardaki resimlere sahip olan düğümlerin yerlerini değiştiriyoruz
-        public static void Swap(LinkedList<Image> list, LinkedListNode<Image> node1, LinkedListNode<Image> node2)
+        public static void Swap(LinkedList<Image> list, LinkedListNode<Image> firstNode, LinkedListNode<Image> secondNode)
         {
-            if (list == null || node1 == null || node2 == null)
+            if (list == null || firstNode == null || secondNode == null)
                 return;
 
-            if (node1 == node2)
+            if (firstNode == secondNode)
                 return;
 
-            // Düğümlerin değerlerini geçici değişkenlerde depoluyoruz
-            Image tempValue = node1.Value;
-            node1.Value = node2.Value;
-            node2.Value = tempValue;
+            Image tempValue = firstNode.Value;
+            firstNode.Value = secondNode.Value;
+            secondNode.Value = tempValue;
         }
 
         private void cut()
@@ -143,20 +141,20 @@ namespace LinkListPuzzleGame
 
             if (orgImg.Image != null)
             {
-                orgList.Clear();//Listeyi temizlemezsem her seferinde ilk seçilen görsel gelir çünkü ilk 16 düğüme bü görselin parçaları atandı
+                orgList.Clear();
             }
 
-            Bitmap resim = new Bitmap(orgImg.Image, 400, 400);
+            Bitmap image = new Bitmap(orgImg.Image, 400, 400);
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)
                 {
-                    Bitmap parca = resim.Clone(new Rectangle(j * 100, i * 100, 100, 100), resim.PixelFormat);
-                    orgList.AddLast(parca);
+                    Bitmap piece = image.Clone(new Rectangle(j * 100, i * 100, 100, 100), image.PixelFormat);
+                    orgList.AddLast(piece);
                 }
             }
 
-            LinkedListNode<Image> current = orgList.First;//Tüm düğümleri sıra sıra gezip içideki parçaları butonlara atamak için Head değerli bir düğüm oluşturdum
+            LinkedListNode<Image> current = orgList.First;
             for (int i = 1; i <= 16; i++)
             {
                 var button = Controls.Find($"button{i}", true).FirstOrDefault() as Button;
@@ -170,7 +168,7 @@ namespace LinkListPuzzleGame
 
         private void orgImg_Click(object sender, EventArgs e)
         {
-            for (int i = 1; i <= 16; i++)//Form ilk açıldığında puzzle parçaları kullanılabilir değildir
+            for (int i = 1; i <= 16; i++)
             {
                 var button = Controls.Find($"button{i}", true).FirstOrDefault() as Button;
                 if (button != null)
@@ -179,7 +177,7 @@ namespace LinkListPuzzleGame
                 }
             }
 
-            orgImg.SizeMode = PictureBoxSizeMode.StretchImage;//Orijinal resmi PicturBox boyutunda sıkıştırıyoruz
+            orgImg.SizeMode = PictureBoxSizeMode.StretchImage;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 shuffleBtn.Enabled = true;
@@ -187,44 +185,42 @@ namespace LinkListPuzzleGame
                 cut();
             }
         }
-        void yazdir(int moveCount, int scoreCount)
+        void print(int moveCount, int scoreCount)
         {
-            string satir = usernameTxt + "," + moveCount.ToString() + "," + scoreCount.ToString();
+            string line = usernameTxt + "," + moveCount.ToString() + "," + scoreCount.ToString();
             using (StreamWriter sw = File.AppendText(scoreFile.FilePath))
             {
-                sw.WriteLine(satir);
+                sw.WriteLine(line);
             }
         }
 
-        void listele()
+        void toList()
         {
             listBox1.Items.Clear();
-            List<string> kayitlar = new List<string>(); // Tutulacak verilerin listelenmesi için bir List<> oluşturduk
+            List<string> records = new List<string>();
 
-            using (StreamReader sr = new StreamReader(scoreFile.FilePath)) // Hangi dosyanın okunacağını belirttik
+            using (StreamReader sr = new StreamReader(scoreFile.FilePath))
             {
-                string satir;
-                while ((satir = sr.ReadLine()) != null) // Eğer ki okunan dosyanın içerisinde okunma devam ediyorsa yani satır değişkeni null dönmüyorsa döngü devam etsin
+                string line;
+                while ((line = sr.ReadLine()) != null)
                 {
-                    string[] sutun = satir.Split(','); // her seferinde okunan veriyi parçalıyoruz
-                    if (sutun[2] != "Puan") // bu parçalamanın tek sebebi başlangıçta oluşturduğumuz sütunların eklenmemesi
+                    string[] row = line.Split(',');
+                    if (row[2] != "Puan")
                     {
-                        string kayit = sutun[0] + "," + sutun[2];
-                        kayitlar.Add(kayit);
+                        string record = row[0] + "," + row[2];
+                        records.Add(record);
                     }
                 }
             }
-            //Sort fonksiyonu listeyi küçükten büyüğe sıralamamıza yarıyor fakat burada bizim istediğimiz yapı ise şudur;
-            //List<string> bir yapının içerisindeki int yapıya göre sıralama yapılması yani "25" ifadesini convert yapıp işleme tutuyor.
-            //Bu sayede Puanlara göre bir listeleme yapıyoruz
-            kayitlar.Sort((x, y) => Convert.ToInt32(x.Split(',')[1]).CompareTo(Convert.ToInt32(y.Split(',')[1])));
-            kayitlar.Reverse(); //Puanlamaya göre yapılan sıralamayı büyükten küçüğe çeviriyoruz
-            int sayac = 1;
-            foreach (var item in kayitlar)
+
+            records.Sort((x, y) => Convert.ToInt32(x.Split(',')[1]).CompareTo(Convert.ToInt32(y.Split(',')[1])));
+            records.Reverse();
+            int count = 1;
+            foreach (var item in records)
             {
-                if (sayac <= 10)
+                if (count <= 10)
                 {
-                    sayac++;
+                    count++;
                     listBox1.Items.Add(item);
                 }
             }
@@ -232,31 +228,29 @@ namespace LinkListPuzzleGame
 
         private void button1_Click(object sender, EventArgs e)
         {
-            bool dogruHamleMi = false;
             Button currentButton = (Button)sender;
+            bool rightMove = false;
 
-            if (firstImage == null)//Eğer şu an içinde bulunulan butonu birinci olarak seçtiysen
+            if (firstImage == null)
             {
-                // İlk buton seçildiğinde
                 firstImage = currentButton.Image;
                 firstButton = currentButton;
             }
-            else//Eğer şu an içinde bulunulan butonu ikinci olarak seçtiysen
+            else
             {
-                moveCount++;//Her hamle yapıldığında sayaç artsın
+                moveCount++;
                 move.Text = moveCount.ToString();
-                // İkinci buton seçildiğinde
                 secondButton = currentButton;
 
-                LinkedListNode<Image> node1 = null;//Image sınıfı türünden bir düğüm elde ediyoruz
-                LinkedListNode<Image> node2 = null;//Image sınıfı türünden bir düğüm elde ediyoruz
+                LinkedListNode<Image> firstNode = null;
+                LinkedListNode<Image> secondNode = null;
 
-                node1 = puzzleList.Find(value: firstButton.Image);//Birinci butonun resim değerine sahip olan düğümü buluyoruz
-                node2 = puzzleList.Find(value: secondButton.Image);//İkinci butonun resim değerine sahip olan düğümü buluyoruz
-                Swap(puzzleList, node1, node2);
+                firstNode = puzzleList.Find(value: firstButton.Image);
+                secondNode = puzzleList.Find(value: secondButton.Image);
+                Swap(puzzleList, firstNode, secondNode);
 
-                LinkedListNode<Image> current = puzzleList.First;//Karışık listenin ilk düğümünü yeni bir düğüme atıyoruz
-                for (int i = 1; i <= 16; i++)//Burada Swap fonksiyonu ile güncellenen puzzleList'i yeniden butonlara atıyoruz
+                LinkedListNode<Image> current = puzzleList.First;
+                for (int i = 1; i <= 16; i++)
                 {
                     var button = Controls.Find($"button{i}", true).FirstOrDefault() as Button;
                     if (button != null)
@@ -266,24 +260,23 @@ namespace LinkListPuzzleGame
                     }
                 }
 
-                //Doğru olan sıralı liste ile karışık listenin her bir düğümü sırasıyla karşılaştırılmalı doğru olduğu tespit edilen buton deaktif olmalı
-                LinkedListNode<Image> mixedTemp = puzzleList.First;//Image sınıfı türünden bir düğüm elde ediyoruz
-                LinkedListNode<Image> temp = orgList.First;//Image sınıfı türünden bir düğüm elde ediyoruz
+                LinkedListNode<Image> mixedTemp = puzzleList.First;
+                LinkedListNode<Image> temp = orgList.First;
                 while (temp != null)
                 {
                     if (temp.Value == mixedTemp.Value)
                     {
-                        for (int i = 1; i <= 16; i++)//16 buton var bunlardan düğüm değeri ile eşleşeni buluyoruz
+                        for (int i = 1; i <= 16; i++)
                         {
                             var button = Controls.Find($"button{i}", true).FirstOrDefault() as Button;
-                            if (button.Image == mixedTemp.Value)//Bu satır her bir düğümü tekrar tekrar işleme tabi tutuyor
+                            if (button.Image == mixedTemp.Value)
                             {
-                                if (button.Enabled != false)//O yüzden bu satırda sadece false olmayanları işleme alıyoruz
+                                if (button.Enabled != false)
                                 {
-                                    button.Enabled = false;//Doğru yerde olan buton deaktif olsun
+                                    button.Enabled = false;
                                     scoreCount += 5; findCount++;
                                     score.Text = scoreCount.ToString();
-                                    dogruHamleMi = true;
+                                    rightMove = true;
                                 }
                             }
                         }
@@ -292,7 +285,7 @@ namespace LinkListPuzzleGame
                     mixedTemp = mixedTemp.Next;
                 }
 
-                if (dogruHamleMi == false)
+                if (rightMove == false)
                 {
                     scoreCount -= 10;
                     score.Text = scoreCount.ToString();
@@ -300,9 +293,9 @@ namespace LinkListPuzzleGame
 
                 if (findCount == 16)
                 {
-                    MessageBox.Show("Tüm parçaları doğru yere koymayı başardınız! Yeniden oynamak için bir resim seçiniz.", "TEBRİKLER", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    yazdir(moveCount, scoreCount);
-                    listele();
+                    MessageBox.Show("Yapboz Tamamlandı", "TEBRİKLER", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    print(moveCount, scoreCount);
+                    toList();
                     orgImg.Enabled = true;
                     moveCount = 0;
                     scoreCount = 0;
@@ -312,7 +305,6 @@ namespace LinkListPuzzleGame
                     orgImg.Image = null;
                 }
 
-                //Depolanan resmi, ikinci butona atayın
                 firstImage = null;
                 firstButton = null;
                 secondButton = null;
