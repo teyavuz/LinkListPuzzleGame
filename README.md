@@ -1,7 +1,7 @@
 
 # LinkListPuzzleGame
 
-Bu proje Visual Studio ortamında Windows Form App (.Net Core 5) ile geliştirilmiştir.
+Bu proje Visual Studio ortamında Windows Form App (.Net Core 5) ile Kocaeli Üniversitesi Yazılım Geliştirme Laboratuvarı Bahar dönemi projesi için geliştirilmiştir.
 
 
 ## Çalışma Biçimi
